@@ -1,9 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
 using Photon.Pun;
-using PlayFab.GroupsModels;
+
 public class PhotonPlayer : MonoBehaviourPun
 {
     [SerializeField] float speed;
@@ -12,9 +11,10 @@ public class PhotonPlayer : MonoBehaviourPun
 
     [SerializeField] Vector3 direction;
     [SerializeField] Camera temporaryCamera;
+
     void Start()
     {
-        // 현재 플레이어가 나 자신이라면
+        // 현재 플레이어가 나 자신이라면?
         if (photonView.IsMine)
         {
             Camera.main.gameObject.SetActive(false);
@@ -22,34 +22,32 @@ public class PhotonPlayer : MonoBehaviourPun
         else
         {
             temporaryCamera.enabled = false;
-
             GetComponentInChildren<AudioListener>().enabled = false;
         }
-
     }
 
-    // Update is called once per frame
     void Update()
     {
-         if (PhotonNetwork.IsMasterClient)
-         {
-                Debug.Log("Master Client");
-         }
+        if (PhotonNetwork.IsMasterClient)
+        {
+            Debug.Log("Master Client");
+        }
+
         if (photonView.IsMine == false) return;
 
-        
-
         Movement();
+
+        Rotation();
     }
 
     public void Movement()
     {
         direction.x = Input.GetAxisRaw("Horizontal");
-        direction.x = Input.GetAxisRaw("Vertical");
+        direction.z = Input.GetAxisRaw("Vertical");
 
         direction.Normalize();
 
-        // TransformDirection: 자기가 바라보고 있는 방향으로 이동하는 함수이다.
+        // TransformDirection : 자기가 바라보고 있는 방향으로 이동하는 함수입니다.
         transform.position += transform.TransformDirection(direction) * speed * Time.deltaTime;
     }
 
@@ -59,6 +57,4 @@ public class PhotonPlayer : MonoBehaviourPun
 
         transform.eulerAngles = new Vector3(0, mouseX, 0);
     }
-
-}     
-
+}
