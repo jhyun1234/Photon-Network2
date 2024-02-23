@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
 
-public class PhotonPlayer : MonoBehaviourPun
+public class PhotonPlayer : MonoBehaviourPun, IPunObservable
 {
+    [SerializeField] int score;
     [SerializeField] float speed;
     [SerializeField] float mouseX;
     [SerializeField] float rotateSpeed;
@@ -53,5 +54,20 @@ public class PhotonPlayer : MonoBehaviourPun
         mouseX += Input.GetAxisRaw("Mouse X") * rotateSpeed * Time.deltaTime;
 
         transform.eulerAngles = new Vector3(0, mouseX, 0);
+    }
+
+    public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+    {
+        // 로컬 오브젝트라면 쓰기 부분을 실행한다.
+        if(stream.IsWriting)
+        {
+            // 네트워크를 통해 데이터를 보낸다.
+            stream.SendNext(score);
+        }
+        else // 원격 오브젝트라면 읽기 부분을 실행한다.
+        {
+            // 네트워크를 통해서 데이터를 받는다.
+            score = (int)stream.ReceiveNext();
+        }
     }
 }
