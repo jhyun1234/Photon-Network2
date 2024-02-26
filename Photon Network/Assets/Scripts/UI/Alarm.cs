@@ -1,4 +1,5 @@
 using JetBrains.Annotations;
+using Photon.Pun;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,9 +8,9 @@ using UnityEngine.UI;
 public enum AlarmType
 {
     Alarm,
-    Nickname
+    PausePanel
 }
-public class Alarm : MonoBehaviour
+public class Alarm : MonoBehaviourPunCallbacks
 {
     [SerializeField] Text content;
    
@@ -25,9 +26,30 @@ public class Alarm : MonoBehaviour
 
         
     }
+    public static void Show(AlarmType alarmType)
+    {
+        GameObject window = Instantiate(Resources.Load<GameObject>(alarmType.ToString()));
+    }
+
+    
+    public void Exit()
+    {
+        PhotonNetwork.LeaveRoom();
+    }
+
+    public override void OnLeftRoom()
+    {
+        PhotonNetwork.LoadLevel("Phothon Lobby");
+    }
+    public void Continue()
+    {
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
+    }
 
     public void Close()
     {
+
         Destroy(gameObject);
     }
 }

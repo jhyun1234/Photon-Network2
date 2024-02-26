@@ -20,14 +20,12 @@ public class MouseManager : MonoBehaviour
     {
         if(Input.GetKeyDown(KeyCode.Escape))
         {
+            Alarm.Show(AlarmType.PausePanel);
             SetMouse(MOUSETYPE.FREE);
         }
     }
 
-    public void LockMouse()
-    {
-        SetMouse(MOUSETYPE.LOCK);
-    }
+   
 
     public void SetMouse(MOUSETYPE mouseType)
     {
