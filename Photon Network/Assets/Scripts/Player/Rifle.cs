@@ -1,7 +1,8 @@
+using Photon.Pun;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Photon.Pun;
+
 public class Rifle : MonoBehaviour
 {
     Ray ray;
@@ -9,14 +10,10 @@ public class Rifle : MonoBehaviour
     [SerializeField] Camera camera;
     [SerializeField] int attack = 20;
     [SerializeField] LayerMask layerMask;
-  
 
-   
     void Update()
     {
         Launch();
-
-
     }
 
     public void Launch()
@@ -25,23 +22,20 @@ public class Rifle : MonoBehaviour
         {
             ray = camera.ViewportPointToRay(new Vector2(0.5f, 0.5f));
 
-            if (Physics.Raycast(ray, out raycastHit, Mathf.Infinity))
+            if (Physics.Raycast(ray, out raycastHit, Mathf.Infinity, layerMask))
             {
                 PhotonView photonView = raycastHit.collider.GetComponent<PhotonView>();
 
                 photonView.GetComponent<Metalon>().Health -= attack;
 
-                if(photonView.GetComponent<Metalon>().Health <=0)
+                if (photonView.GetComponent<Metalon>().Health <= 0)
                 {
-                    if(photonView.IsMine)
+                    if (photonView.IsMine)
                     {
-                       PhotonNetwork.Destroy(raycastHit.collider.gameObject);
-
+                        PhotonNetwork.Destroy(raycastHit.collider.gameObject);
                     }
-                    
                 }
             }
         }
-
     }
 }

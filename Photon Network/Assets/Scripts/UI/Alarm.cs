@@ -1,4 +1,3 @@
-using JetBrains.Annotations;
 using Photon.Pun;
 using System.Collections;
 using System.Collections.Generic;
@@ -10,10 +9,11 @@ public enum AlarmType
     Alarm,
     PausePanel
 }
+
 public class Alarm : MonoBehaviourPunCallbacks
 {
     [SerializeField] Text content;
-   
+
     public static void Show(string message, AlarmType alarmType)
     {
         GameObject window = Instantiate(Resources.Load<GameObject>(alarmType.ToString()));
@@ -23,15 +23,13 @@ public class Alarm : MonoBehaviourPunCallbacks
         window.GetComponent<Alarm>().content.fontSize = 65;
 
         window.GetComponent<Alarm>().content.alignment = TextAnchor.MiddleCenter;
-
-        
     }
+
     public static void Show(AlarmType alarmType)
     {
         GameObject window = Instantiate(Resources.Load<GameObject>(alarmType.ToString()));
     }
 
-    
     public void Exit()
     {
         PhotonNetwork.LeaveRoom();
@@ -39,17 +37,19 @@ public class Alarm : MonoBehaviourPunCallbacks
 
     public override void OnLeftRoom()
     {
-        PhotonNetwork.LoadLevel("Phothon Lobby");
+        PhotonNetwork.LoadLevel("Photon Lobby");
     }
+
     public void Continue()
     {
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
+
+        Destroy(gameObject);
     }
 
     public void Close()
     {
-
         Destroy(gameObject);
     }
 }
